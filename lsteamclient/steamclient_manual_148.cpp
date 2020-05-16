@@ -11,15 +11,15 @@ WINE_DEFAULT_DEBUG_CHANNEL(steamclient);
 #include "steam_defs.h"
 #pragma push_macro("__cdecl")
 #undef __cdecl
-#include "steamworks_sdk_148/steam_api.h"
-#include "steamworks_sdk_148/isteamnetworkingsockets.h"
-#include "steamworks_sdk_148/isteamnetworkingutils.h"
-#include "steamworks_sdk_148/steamnetworkingtypes.h"
+#include "steamworks_sdk_148a/steam_api.h"
+#include "steamworks_sdk_148a/isteamnetworkingsockets.h"
+#include "steamworks_sdk_148a/isteamnetworkingutils.h"
+#include "steamworks_sdk_148a/steamnetworkingtypes.h"
 #pragma pop_macro("__cdecl")
 #include "steamclient_private.h"
 
 extern "C" {
-#define SDKVER_148
+#define SDKVER_148a
 #include "struct_converters.h"
 
 #include "queue.h"
@@ -27,7 +27,7 @@ extern "C" {
 /***** manual struct converter for SteamNetworkingMessage_t *****/
 
 struct msg_wrapper {
-    struct winSteamNetworkingMessage_t_148 win_msg;
+    struct winSteamNetworkingMessage_t_148a win_msg;
     struct SteamNetworkingMessage_t *lin_msg;
 
     void (*orig_FreeData)(SteamNetworkingMessage_t *);
@@ -38,7 +38,7 @@ struct msg_wrapper {
 static SLIST_HEAD(free_msgs_head, msg_wrapper) free_msgs = SLIST_HEAD_INITIALIZER(free_msgs);
 static CRITICAL_SECTION free_msgs_lock = { NULL, -1, 0, 0, 0, 0 };
 
-static void __attribute__((ms_abi)) win_FreeData(struct winSteamNetworkingMessage_t_148 *win_msg)
+static void __attribute__((ms_abi)) win_FreeData(struct winSteamNetworkingMessage_t_148a *win_msg)
 {
     struct msg_wrapper *msg = CONTAINING_RECORD(win_msg, struct msg_wrapper, win_msg);
     TRACE("%p\n", msg);
@@ -49,7 +49,7 @@ static void __attribute__((ms_abi)) win_FreeData(struct winSteamNetworkingMessag
     }
 }
 
-static void __attribute__((ms_abi)) win_Release(struct winSteamNetworkingMessage_t_148 *win_msg)
+static void __attribute__((ms_abi)) win_Release(struct winSteamNetworkingMessage_t_148a *win_msg)
 {
     struct msg_wrapper *msg = CONTAINING_RECORD(win_msg, struct msg_wrapper, win_msg);
     TRACE("%p\n", msg);
@@ -66,7 +66,7 @@ static void lin_FreeData(struct SteamNetworkingMessage_t *lin_msg)
     struct msg_wrapper *msg = (struct msg_wrapper *)lin_msg->m_pData; /* ! see assignment, below */
     TRACE("%p\n", msg);
     if(msg->win_msg.m_pfnFreeData)
-        ((void (__attribute__((ms_abi))*)(struct winSteamNetworkingMessage_t_148 *))msg->win_msg.m_pfnFreeData)(&msg->win_msg);
+        ((void (__attribute__((ms_abi))*)(struct winSteamNetworkingMessage_t_148a *))msg->win_msg.m_pfnFreeData)(&msg->win_msg);
 }
 
 static struct msg_wrapper *clone_msg(struct SteamNetworkingMessage_t *lin_msg)
@@ -113,7 +113,7 @@ static struct msg_wrapper *clone_msg(struct SteamNetworkingMessage_t *lin_msg)
     return msg;
 }
 
-void lin_to_win_struct_SteamNetworkingMessage_t_148(int n_messages, struct SteamNetworkingMessage_t **l, struct winSteamNetworkingMessage_t_148 **w, int max_messages)
+void lin_to_win_struct_SteamNetworkingMessage_t_148a(int n_messages, struct SteamNetworkingMessage_t **l, struct winSteamNetworkingMessage_t_148a **w, int max_messages)
 {
     int i;
 
@@ -137,26 +137,27 @@ void lin_to_win_struct_SteamNetworkingMessage_t_148(int n_messages, struct Steam
 
 int cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnConnection(
         void *linux_side, HSteamNetConnection hConn,
-        winSteamNetworkingMessage_t_148 **ppOutMessages, int nMaxMessages)
+        winSteamNetworkingMessage_t_148a **ppOutMessages, int nMaxMessages)
 {
     SteamNetworkingMessage_t *lin_ppOutMessages[nMaxMessages];
     int retval = ((ISteamNetworkingSockets*)linux_side)->ReceiveMessagesOnConnection(hConn, lin_ppOutMessages, nMaxMessages);
-    lin_to_win_struct_SteamNetworkingMessage_t_148(retval, lin_ppOutMessages, ppOutMessages, nMaxMessages);
+    lin_to_win_struct_SteamNetworkingMessage_t_148a(retval, lin_ppOutMessages, ppOutMessages, nMaxMessages);
     return retval;
 }
 
-int cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket(
-        void *linux_side, HSteamListenSocket hSocket,
-        winSteamNetworkingMessage_t_148 **ppOutMessages, int nMaxMessages)
-{
-    SteamNetworkingMessage_t *lin_ppOutMessages[nMaxMessages];
-    int retval = ((ISteamNetworkingSockets*)linux_side)->ReceiveMessagesOnListenSocket(hSocket, lin_ppOutMessages, nMaxMessages);
-    lin_to_win_struct_SteamNetworkingMessage_t_148(retval, lin_ppOutMessages, ppOutMessages, nMaxMessages);
-    return retval;
-}
+// Removed.
+// int cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket(
+//         void *linux_side, HSteamListenSocket hSocket,
+//         winSteamNetworkingMessage_t_148a **ppOutMessages, int nMaxMessages)
+// {
+//     SteamNetworkingMessage_t *lin_ppOutMessages[nMaxMessages];
+//     int retval = ((ISteamNetworkingSockets*)linux_side)->ReceiveMessagesOnListenSocket(hSocket, lin_ppOutMessages, nMaxMessages);
+//     lin_to_win_struct_SteamNetworkingMessage_t_148a(retval, lin_ppOutMessages, ppOutMessages, nMaxMessages);
+//     return retval;
+// }
 
 void cppISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages(
-        void *linux_side, int nMessages, winSteamNetworkingMessage_t_148 **pMessages,
+        void *linux_side, int nMessages, winSteamNetworkingMessage_t_148a **pMessages,
         int64 *pOutMessageNumberOrResult)
 {
 #define MAX_SEND_MESSAGES 64
@@ -198,15 +199,10 @@ void cppISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages(
     }
 }
 
-SteamNetworkingMessage_t *cppISteamNetworkingUtils_SteamNetworkingUtils003_AllocateMessage(
-        void *linux_side, int cbAllocateBuffer)
+// @todo Implement manual override
+int cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnPollGroup( void *linux_side, HSteamNetPollGroup hPollGroup, winSteamNetworkingMessage_t_148a ** ppOutMessages, int nMaxMessages )
 {
-    struct msg_wrapper *msg;
-    SteamNetworkingMessage_t *retval = ((ISteamNetworkingUtils*)linux_side)->AllocateMessage(cbAllocateBuffer);
-
-    msg = clone_msg(retval);
-
-    return (SteamNetworkingMessage_t*)&msg->win_msg;
+	return ((ISteamNetworkingSockets*)linux_side)->ReceiveMessagesOnPollGroup( hPollGroup,(SteamNetworkingMessage_t **)ppOutMessages,nMaxMessages );
 }
 
 }
