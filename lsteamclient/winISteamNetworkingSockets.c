@@ -107,7 +107,7 @@ EResult __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_SendMess
 }
 
 DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages, 16)
-void __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, int nMessages, winSteamNetworkingMessage_t_147 ** pMessages, int64 * pOutMessageNumberOrResult)
+void __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, int nMessages, winSteamNetworkingMessage_t_148a ** pMessages, int64 * pOutMessageNumberOrResult)
 {
     TRACE("%p\n", _this);
     cppISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages(_this->linux_side, nMessages, pMessages, pOutMessageNumberOrResult);
@@ -121,18 +121,19 @@ EResult __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_FlushMes
 }
 
 DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnConnection, 16)
-int __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnConnection(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, HSteamNetConnection hConn, winSteamNetworkingMessage_t_147 ** ppOutMessages, int nMaxMessages)
+int __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnConnection(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, HSteamNetConnection hConn, winSteamNetworkingMessage_t_148a ** ppOutMessages, int nMaxMessages)
 {
     TRACE("%p\n", _this);
     return cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnConnection(_this->linux_side, hConn, ppOutMessages, nMaxMessages);
 }
 
-DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket, 16)
-int __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, HSteamListenSocket hSocket, winSteamNetworkingMessage_t_147 ** ppOutMessages, int nMaxMessages)
-{
-    TRACE("%p\n", _this);
-    return cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket(_this->linux_side, hSocket, ppOutMessages, nMaxMessages);
-}
+// Removed.
+// DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket, 16)
+// int __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, HSteamListenSocket hSocket, winSteamNetworkingMessage_t_148a ** ppOutMessages, int nMaxMessages)
+// {
+//     TRACE("%p\n", _this);
+//     return cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket(_this->linux_side, hSocket, ppOutMessages, nMaxMessages);
+// }
 
 DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_GetConnectionInfo, 12)
 bool __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_GetConnectionInfo(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, HSteamNetConnection hConn, SteamNetConnectionInfo_t * pInfo)
@@ -260,6 +261,49 @@ bool __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_ReceivedP2P
     return cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceivedP2PCustomSignal(_this->linux_side, pMsg, cbMsg, pContext);
 }
 
+// SDK 148a
+DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_GetCertificateRequest, 16)
+bool __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_GetCertificateRequest(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, int * pcbBlob, void * pBlob, SteamNetworkingErrMsg * errMsg )
+{
+    TRACE("%p\n", _this);
+    return cppISteamNetworkingSockets_SteamNetworkingSockets008_GetCertificateRequest(_this->linux_side, pcbBlob, pBlob,*errMsg);
+}
+
+DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_SetCertificate, 16)
+bool __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_SetCertificate(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, const void * pCertificate, int cbCertificate, SteamNetworkingErrMsg * errMsg)
+{
+    TRACE("%p\n", _this);
+    return cppISteamNetworkingSockets_SteamNetworkingSockets008_SetCertificate(_this->linux_side, pCertificate,cbCertificate,*errMsg);
+}
+
+DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_CreatePollGroup, 4)
+bool __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_CreatePollGroup(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this)
+{
+    TRACE("%p\n", _this);
+    return cppISteamNetworkingSockets_SteamNetworkingSockets008_CreatePollGroup(_this->linux_side);
+}
+
+DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_DestroyPollGroup, 8)
+bool __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_DestroyPollGroup(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, HSteamNetPollGroup hPollGroup)
+{
+    TRACE("%p\n", _this);
+    return cppISteamNetworkingSockets_SteamNetworkingSockets008_DestroyPollGroup(_this->linux_side, hPollGroup);
+}
+
+DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_SetConnectionPollGroup, 12)
+bool __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_SetConnectionPollGroup(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, HSteamNetConnection hConn, HSteamNetPollGroup hPollGroup)
+{
+    TRACE("%p\n", _this);
+    return cppISteamNetworkingSockets_SteamNetworkingSockets008_SetConnectionPollGroup(_this->linux_side, hConn ,hPollGroup );
+}
+
+DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnPollGroup, 16)
+bool __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnPollGroup(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this, HSteamNetPollGroup hPollGroup, winSteamNetworkingMessage_t_148a ** ppOutMessages, int nMaxMessages)
+{
+    TRACE("%p\n", _this);
+    return cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnPollGroup(_this->linux_side, hPollGroup,(SteamNetworkingMessage_t **)ppOutMessages,nMaxMessages);
+}
+
 DEFINE_THISCALL_WRAPPER(winISteamNetworkingSockets_SteamNetworkingSockets008_destructor, 4)
 void __thiscall winISteamNetworkingSockets_SteamNetworkingSockets008_destructor(winISteamNetworkingSockets_SteamNetworkingSockets008 *_this)
 {/* never called */}
@@ -285,7 +329,7 @@ void __asm_dummy_vtables(void) {
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages)
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_FlushMessagesOnConnection)
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnConnection)
-        VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket)
+        //VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnListenSocket)
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_GetConnectionInfo)
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_GetQuickConnectionStatus)
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_GetDetailedConnectionStatus)
@@ -305,6 +349,14 @@ void __asm_dummy_vtables(void) {
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_ConnectP2PCustomSignaling)
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceivedP2PCustomSignal)
         VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_destructor)
+        // SDK 148a
+        VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_GetCertificateRequest)
+        VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_SetCertificate)
+        VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_CreatePollGroup)
+        VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_DestroyPollGroup)
+        VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_SetConnectionPollGroup)
+        VTABLE_ADD_FUNC(winISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnPollGroup)
+
     );
 #ifndef __GNUC__
 }

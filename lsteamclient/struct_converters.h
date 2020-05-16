@@ -1,6 +1,6 @@
-#if defined(SDKVER_148) || !defined(__cplusplus)
+#if defined(SDKVER_148a) || !defined(__cplusplus)
 #pragma pack( push, 8 )
-struct winSteamNetworkingMessage_t_148 {
+struct winSteamNetworkingMessage_t_148a {
     void * m_pData;
     int m_cbSize;
     HSteamNetConnection m_conn;
@@ -15,7 +15,7 @@ struct winSteamNetworkingMessage_t_148 {
     int64 m_nUserData;
 }  __attribute__ ((ms_struct));
 #pragma pack( pop )
-typedef struct winSteamNetworkingMessage_t_148 winSteamNetworkingMessage_t_148;
+typedef struct winSteamNetworkingMessage_t_148a winSteamNetworkingMessage_t_148a;
 struct SteamNetworkingMessage_t;
 #endif
 

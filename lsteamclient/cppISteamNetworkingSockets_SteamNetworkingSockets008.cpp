@@ -1,34 +1,35 @@
 #include "steam_defs.h"
 #pragma push_macro("__cdecl")
 #undef __cdecl
-#include "steamworks_sdk_148/steam_api.h"
-#include "steamworks_sdk_148/steamnetworkingtypes.h"
-#include "steamworks_sdk_148/isteamnetworkingsockets.h"
+#include "steamworks_sdk_148a/steam_api.h"
+#include "steamworks_sdk_148a/steamnetworkingtypes.h"
+#include "steamworks_sdk_148a/isteamnetworkingsockets.h"
+#include "steamworks_sdk_148a/isteamnetworkingutils.h"
 #pragma pop_macro("__cdecl")
 #include "steamclient_private.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define SDKVER_147
+#define SDKVER_148a
 #include "struct_converters.h"
 #include "cppISteamNetworkingSockets_SteamNetworkingSockets008.h"
 
-HSteamListenSocket cppISteamNetworkingSockets_SteamNetworkingSockets008_CreateListenSocketIP( void *linux_side, const SteamNetworkingIPAddr & localAddress, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
+HSteamListenSocket cppISteamNetworkingSockets_SteamNetworkingSockets008_CreateListenSocketIP( void *linux_side, const SteamNetworkingIPAddr * localAddress, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
 {
-	return ((ISteamNetworkingSockets*)linux_side)->CreateListenSocketIP( localAddress,nOptions,pOptions );
+	return ((ISteamNetworkingSockets*)linux_side)->CreateListenSocketIP( (const SteamNetworkingIPAddr) *localAddress,nOptions,pOptions );
 }
-HSteamNetConnection cppISteamNetworkingSockets_SteamNetworkingSockets008_ConnectByIPAddress( void *linux_side, const SteamNetworkingIPAddr & address, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
+HSteamNetConnection cppISteamNetworkingSockets_SteamNetworkingSockets008_ConnectByIPAddress( void *linux_side, const SteamNetworkingIPAddr * address, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
 {
-	return ((ISteamNetworkingSockets*)linux_side)->ConnectByIPAddress( address,nOptions,pOptions );
+	return ((ISteamNetworkingSockets*)linux_side)->ConnectByIPAddress( (const SteamNetworkingIPAddr) *address,nOptions,pOptions );
 }
 
 HSteamListenSocket cppISteamNetworkingSockets_SteamNetworkingSockets008_CreateListenSocketP2P( void *linux_side, int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
 {
 	return ((ISteamNetworkingSockets*)linux_side)->CreateListenSocketP2P( nVirtualPort,nOptions,pOptions );
 }
-HSteamNetConnection cppISteamNetworkingSockets_SteamNetworkingSockets008_ConnectP2P( void *linux_side, const SteamNetworkingIdentity & identityRemote, int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
+HSteamNetConnection cppISteamNetworkingSockets_SteamNetworkingSockets008_ConnectP2P( void *linux_side, const SteamNetworkingIdentity * identityRemote, int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
 {
-	return ((ISteamNetworkingSockets*)linux_side)->ConnectP2P( identityRemote,nVirtualPort,nOptions,pOptions );
+	return ((ISteamNetworkingSockets*)linux_side)->ConnectP2P( *identityRemote,nVirtualPort,nOptions,pOptions );
 }
 
 EResult cppISteamNetworkingSockets_SteamNetworkingSockets008_AcceptConnection( void *linux_side, HSteamNetConnection hConn )
@@ -63,18 +64,20 @@ EResult cppISteamNetworkingSockets_SteamNetworkingSockets008_SendMessageToConnec
 {
 	return ((ISteamNetworkingSockets*)linux_side)->SendMessageToConnection( hConn,pData,cbData,nSendFlags,pOutMessageNumber );
 }
-void cppISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages( void *linux_side, int nMessages, winSteamNetworkingMessage_t_148 *const * pMessages, int64 * pOutMessageNumberOrResult )
-{
-	((ISteamNetworkingSockets*)linux_side)->SendMessages( nMessages,pMessages,pOutMessageNumberOrResult );
-}
+// steamclient_manual_148.cpp
+// void cppISteamNetworkingSockets_SteamNetworkingSockets008_SendMessages( void *linux_side, int nMessages, winSteamNetworkingMessage_t_148a *const * pMessages, int64 * pOutMessageNumberOrResult )
+// {
+// 	((ISteamNetworkingSockets*)linux_side)->SendMessages( nMessages,(SteamNetworkingMessage_t *const *) pMessages,pOutMessageNumberOrResult );
+// }
 EResult cppISteamNetworkingSockets_SteamNetworkingSockets008_FlushMessagesOnConnection( void *linux_side, HSteamNetConnection hConn )
 {
 	return ((ISteamNetworkingSockets*)linux_side)->FlushMessagesOnConnection( hConn );
 }
-int cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnConnection( void *linux_side, HSteamNetConnection hConn, winSteamNetworkingMessage_t_148 ** ppOutMessages, int nMaxMessages )
-{
-	return ((ISteamNetworkingSockets*)linux_side)->ReceiveMessagesOnConnection( hConn,ppOutMessages,nMaxMessages );
-}
+// steamclient_manual_148.cpp
+// int cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnConnection( void *linux_side, HSteamNetConnection hConn, winSteamNetworkingMessage_t_148a ** ppOutMessages, int nMaxMessages )
+// {
+// 	return ((ISteamNetworkingSockets*)linux_side)->ReceiveMessagesOnConnection( hConn, (SteamNetworkingMessage_t **) ppOutMessages,nMaxMessages );
+// }
 bool cppISteamNetworkingSockets_SteamNetworkingSockets008_GetConnectionInfo( void *linux_side, HSteamNetConnection hConn, SteamNetConnectionInfo_t * pInfo )
 {
 	return ((ISteamNetworkingSockets*)linux_side)->GetConnectionInfo( hConn,pInfo );
@@ -107,34 +110,18 @@ ESteamNetworkingAvailability cppISteamNetworkingSockets_SteamNetworkingSockets00
 {
 	return ((ISteamNetworkingSockets*)linux_side)->GetAuthenticationStatus( pDetails );
 }
-HSteamNetPollGroup cppISteamNetworkingSockets_SteamNetworkingSockets008_CreatePollGroup( void *linux_side )
-{
-	return ((ISteamNetworkingSockets*)linux_side)->CreatePollGroup(  );
-}
-bool cppISteamNetworkingSockets_SteamNetworkingSockets008_DestroyPollGroup( void *linux_side, HSteamNetPollGroup hPollGroup )
-{
-	return ((ISteamNetworkingSockets*)linux_side)->DestroyPollGroup( hPollGroup );
-}
-bool cppISteamNetworkingSockets_SteamNetworkingSockets008_SetConnectionPollGroup( void *linux_side, HSteamNetConnection hConn, HSteamNetPollGroup hPollGroup )
-{
-	return ((ISteamNetworkingSockets*)linux_side)->SetConnectionPollGroup( hConn,hPollGroup );
-}
-int cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnPollGroup( void *linux_side, HSteamNetPollGroup hPollGroup, winSteamNetworkingMessage_t_148 ** ppOutMessages, int nMaxMessages )
-{
-	return ((ISteamNetworkingSockets*)linux_side)->ReceiveMessagesOnPollGroup( hPollGroup,ppOutMessages,nMaxMessages );
-}
 
 bool cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceivedRelayAuthTicket( void *linux_side, const void * pvTicket, int cbTicket, SteamDatagramRelayAuthTicket * pOutParsedTicket )
 {
 	return ((ISteamNetworkingSockets*)linux_side)->ReceivedRelayAuthTicket( pvTicket,cbTicket,pOutParsedTicket );
 }
-int cppISteamNetworkingSockets_SteamNetworkingSockets008_FindRelayAuthTicketForServer( void *linux_side, const SteamNetworkingIdentity & identityGameServer, int nVirtualPort, SteamDatagramRelayAuthTicket * pOutParsedTicket )
+int cppISteamNetworkingSockets_SteamNetworkingSockets008_FindRelayAuthTicketForServer( void *linux_side, const SteamNetworkingIdentity * identityGameServer, int nVirtualPort, SteamDatagramRelayAuthTicket * pOutParsedTicket )
 {
-	return ((ISteamNetworkingSockets*)linux_side)->FindRelayAuthTicketForServer( identityGameServer,nVirtualPort,pOutParsedTicket );
+	return ((ISteamNetworkingSockets*)linux_side)->FindRelayAuthTicketForServer( *identityGameServer,nVirtualPort,pOutParsedTicket );
 }
-HSteamNetConnection cppISteamNetworkingSockets_SteamNetworkingSockets008_ConnectToHostedDedicatedServer( void *linux_side, const SteamNetworkingIdentity & identityTarget, int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
+HSteamNetConnection cppISteamNetworkingSockets_SteamNetworkingSockets008_ConnectToHostedDedicatedServer( void *linux_side, const SteamNetworkingIdentity * identityTarget, int nVirtualPort, int nOptions, const SteamNetworkingConfigValue_t * pOptions )
 {
-	return ((ISteamNetworkingSockets*)linux_side)->ConnectToHostedDedicatedServer( identityTarget,nVirtualPort,nOptions,pOptions );
+	return ((ISteamNetworkingSockets*)linux_side)->ConnectToHostedDedicatedServer( *identityTarget,nVirtualPort,nOptions,pOptions );
 }
 uint16 cppISteamNetworkingSockets_SteamNetworkingSockets008_GetHostedDedicatedServerPort( void *linux_side )
 {
@@ -165,14 +152,33 @@ bool cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceivedP2PCustomSigna
 	return ((ISteamNetworkingSockets*)linux_side)->ReceivedP2PCustomSignal( pMsg,cbMsg,pContext );
 }
 
-bool cppISteamNetworkingSockets_SteamNetworkingSockets008_GetCertificateRequest( void *linux_side, int * pcbBlob, void * pBlob, SteamNetworkingErrMsg & errMsg )
+// New methods
+bool cppISteamNetworkingSockets_SteamNetworkingSockets008_GetCertificateRequest( void *linux_side, int * pcbBlob, void * pBlob, SteamNetworkingErrMsg * errMsg )
 {
-	return ((ISteamNetworkingSockets*)linux_side)->GetCertificateRequest( pcbBlob,pBlob,errMsg );
+	return ((ISteamNetworkingSockets*)linux_side)->GetCertificateRequest( pcbBlob,pBlob,*errMsg );
 }
-bool cppISteamNetworkingSockets_SteamNetworkingSockets008_SetCertificate( void *linux_side, const void * pCertificate, int cbCertificate, SteamNetworkingErrMsg & errMsg )
+bool cppISteamNetworkingSockets_SteamNetworkingSockets008_SetCertificate( void *linux_side, const void * pCertificate, int cbCertificate, SteamNetworkingErrMsg * errMsg )
 {
-	return ((ISteamNetworkingSockets*)linux_side)->SetCertificate( pCertificate,cbCertificate,errMsg );
+	return ((ISteamNetworkingSockets*)linux_side)->SetCertificate( pCertificate,cbCertificate,*errMsg );
 }
+HSteamNetPollGroup cppISteamNetworkingSockets_SteamNetworkingSockets008_CreatePollGroup( void *linux_side )
+{
+	return ((ISteamNetworkingSockets*)linux_side)->CreatePollGroup(  );
+}
+bool cppISteamNetworkingSockets_SteamNetworkingSockets008_DestroyPollGroup( void *linux_side, HSteamNetPollGroup hPollGroup )
+{
+	return ((ISteamNetworkingSockets*)linux_side)->DestroyPollGroup( hPollGroup );
+}
+bool cppISteamNetworkingSockets_SteamNetworkingSockets008_SetConnectionPollGroup( void *linux_side, HSteamNetConnection hConn, HSteamNetPollGroup hPollGroup )
+{
+	return ((ISteamNetworkingSockets*)linux_side)->SetConnectionPollGroup( hConn,hPollGroup );
+}
+
+// @todo define in steamclient_manual_148.cpp
+// int cppISteamNetworkingSockets_SteamNetworkingSockets008_ReceiveMessagesOnPollGroup( void *linux_side, HSteamNetPollGroup hPollGroup, winSteamNetworkingMessage_t_148a ** ppOutMessages, int nMaxMessages )
+// {
+// 	return ((ISteamNetworkingSockets*)linux_side)->ReceiveMessagesOnPollGroup( hPollGroup,(SteamNetworkingMessage_t **)ppOutMessages,nMaxMessages );
+// }
 
 #ifdef __cplusplus
 }
